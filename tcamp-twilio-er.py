@@ -38,7 +38,7 @@ class zubies_contact:
         _timestmp = None
 
         month,day,year = str(self._date_frag).split('/')
-        self._date_frag = "%s-%s-%s" % (year, month.zfill(2), day)
+        self._date_frag = "%s-%s-%s" % (year, month.zfill(2), day.zfill(2))
 
         try:
             hour, minute, second = self._time_frag.split(':')
@@ -86,7 +86,7 @@ def get_zubies_spreadsheet():
     for i in sheets_we_care_about:
         wks = spread.get_worksheet(i)
         tmp = wks.get_all_values()
-        tmp = tmp[1:]
+        tmp = tmp[1:] # get rid off the first line , there must be a smart way to do this FIXME
         list_of_lists = list_of_lists + tmp
 
     return list_of_lists
@@ -96,7 +96,6 @@ def send_sms (contact):
     from time import time
     from twilio.rest import TwilioRestClient
 
-    #print "%s %s %s %s" % (time().strftime("%Y-%m-%d %H:%M:%S"), contact.name, contact.fon, contact.txt_msg)
     if DEBUG:
         print "DEBUG :: %s %s %s %s" % (time(), contact.name, contact.fon, contact.txt_msg)
 
