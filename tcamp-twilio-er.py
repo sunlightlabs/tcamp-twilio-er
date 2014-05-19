@@ -79,11 +79,7 @@ def get_zubies_spreadsheet():
     spread = gc.open_by_key(GOOG_SPREADSHEET_KEY)
 
     list_of_lists = []
-    if DEBUG:
-        sheets_we_care_about= [2]
-    else:
-        sheets_we_care_about= [0, 1]
-    for i in sheets_we_care_about:
+    for i in SHEETS_WE_CARE_ABOUT:
         wks = spread.get_worksheet(i)
         tmp = wks.get_all_values()
         tmp = tmp[1:] # get rid off the first line , there must be a smart way to do this FIXME
