@@ -1,0 +1,8 @@
+APScheduler==2.1.2
+click==0.7
+gspread==0.2.1
+httplib2==0.9
+python-dateutil==2.2
+six==1.6.1
+twilio==3.6.6
+wsgiref==0.1.2
