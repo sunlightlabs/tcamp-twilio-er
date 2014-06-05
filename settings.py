@@ -1,5 +1,6 @@
 # settings for tcamp-twilio-er.py
 
+DEBUG = False
 # twilio account settings
 TWLIO_ACCNT = "***REMOVED***"
 TOKEN = "***REMOVED***"

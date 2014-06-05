@@ -6,11 +6,11 @@
 # $Id$
 #
 
-DEBUG = True
+#DEBUG = False
 
 # some setting info for twilio
 try:
-    from settings import *
+    import settings
 except ImportError, exp:
     pass
 
@@ -37,14 +37,20 @@ class zubies_contact:
         _date_string = None
         _timestmp = None
 
-        month,day,year = str(self._date_frag).split('/')
-        self._date_frag = "%s-%s-%s" % (year, month.zfill(2), day.zfill(2))
+	try:
+		month,day,year = str(self._date_frag).split('/')
+		self._date_frag = "%s-%s-%s" % (year, month.zfill(2), day.zfill(2))
+	except:
+		print "name: %s date:%s time:%s fon:%s" % (self.name, self._date_frag, self._time_frag, self._fon_frag);
+		sys.exit(1)
+
 
         try:
             hour, minute, second = self._time_frag.split(':')
         except:
             sys.stderr.write("SHIT error ! |%s| |%s| |%s| |%s| |%s|" % (self.name, self.txt_msg, self.fon, self._date_frag, self._time_frag))
             hour, minute, second = "11:11:11".split(':') # just keep going
+            sys.exit(1)
 
         if int(hour) < 6:
             # XXX arbitrarily declaring anything before 6 to be in the PM . --timball
@@ -62,8 +68,10 @@ class zubies_contact:
         return _date_string
 
     def _munge_fon(self):
+        import re
+        p = re.compile(' |-')
         try:
-            fon = self._fon_frag.replace('-', '')
+            fon = p.sub('', self._fon_frag)
         except:
             sys.stderr.write("PANTS error ! |%s| |%s| |%s| |%s| |%s|" % (self.name, self.txt_msg, self._fon_frag, self._date_frag, self._time_frag))
             sys.exit(1)
@@ -75,11 +83,11 @@ class zubies_contact:
 def get_zubies_spreadsheet():
     import gspread
 
-    gc = gspread.login(GOOG_USER, GOOG_PASSWD)
-    spread = gc.open_by_key(GOOG_SPREADSHEET_KEY)
+    gc = gspread.login(settings.GOOG_USER, settings.GOOG_PASSWD)
+    spread = gc.open_by_key(settings.GOOG_SPREADSHEET_KEY)
 
     list_of_lists = []
-    for i in SHEETS_WE_CARE_ABOUT:
+    for i in settings.SHEETS_WE_CARE_ABOUT:
         wks = spread.get_worksheet(i)
         tmp = wks.get_all_values()
         tmp = tmp[1:] # get rid off the first line , there must be a smart way to do this FIXME
@@ -92,11 +100,11 @@ def send_sms (contact):
     from time import time
     from twilio.rest import TwilioRestClient
 
-    if DEBUG:
+    if settings.DEBUG:
         print "DEBUG :: %s %s %s %s" % (time(), contact.name, contact.fon, contact.txt_msg)
 
-    client = TwilioRestClient(TWLIO_ACCNT, TOKEN)
-    message = client.messages.create(to=contact.fon, from_=TCAMP_FON, body=contact.txt_msg)
+    client = TwilioRestClient(settings.TWLIO_ACCNT, settings.TOKEN)
+    message = client.messages.create(to=contact.fon, from_=settings.TCAMP_FON, body=contact.txt_msg)
 
 
 @click.command()
@@ -105,7 +113,7 @@ def main():
     from time import sleep
     from apscheduler.scheduler import Scheduler
 
-    if DEBUG:
+    if settings.DEBUG:
         click.echo("hello")
 
     # create a scheduler and start it
@@ -134,7 +142,7 @@ def main():
     i = 0
     while True:
         sleep(1)
-        if DEBUG:
+        if True:
             i += 1
             if (i % 10 == 0):
                 sys.stdout.write('.'); sys.stdout.flush()
