@@ -2,14 +2,14 @@
 
 DEBUG = False
 # twilio account settings
-TWLIO_ACCNT = "***REMOVED***"
-TOKEN = "***REMOVED***"
-TCAMP_FON = "***REMOVED***"
+TWLIO_ACCNT = ""
+TOKEN = ""
+TCAMP_FON = ""
 
 # settings for google ... should make this a unique APP PASSWD FIXME
-GOOG_USER="timball@sunlightfoundation.com"
-GOOG_PASSWD="***REMOVED***"
-GOOG_SPREADSHEET_KEY="***REMOVED***"
+GOOG_USER=""
+GOOG_PASSWD=""
+GOOG_SPREADSHEET_KEY=""
 
 # in our case sheets 0,1 have data and sheet 2 is a tester
 if DEBUG is not True:
